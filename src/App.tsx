@@ -16,6 +16,9 @@ import { CSSTransition } from "react-transition-group";
 import "./components/AddTask.css";
 import "react-clock/dist/Clock.css";
 
+// Helpers
+import { addSeconds, formatDate } from "./helpers/utils.helpers";
+
 function App() {
   // Store
   const { tasks } = useStore((state) => state);
@@ -25,13 +28,18 @@ function App() {
   const initialDate = new Date(2000, 1, 1, 0, 0, 0, 0);
   const [time, setTime] = useState(initialDate);
   const [timePassed, setTimePassed] = useState("00:00");
+  const [continueTimer, setContinueTimer] = useState(false);
   // Estados para el log
   const [log, setLog] = useState<any>([]);
+  // Estados sesion
+  const [session, setSession] = useState(false);
 
   function addTaskToLog(task?: string) {
     setLog((oldLog: any) => {
       return [...oldLog, { task, time: timePassed }];
     });
+
+    setContinueTimer(() => true);
 
     // Reset el tiempo
     setTime(initialDate);
@@ -67,29 +75,19 @@ function App() {
   }
 
   useEffect(() => {
-    function addSeconds(date: Date, seconds: number) {
-      const time = 1000 * seconds + date.getTime();
-      return new Date(time);
+    if (continueTimer) {
+      console.log("entra al timer");
+      const timeoutId = setInterval(() => {
+        const newDate = addSeconds(time, 1);
+        const dateDifferenceInMiliseconds =
+          newDate.getTime() - initialDate.getTime();
+        setTimePassed(formatDate(dateDifferenceInMiliseconds));
+        setTime(newDate);
+      }, 1000);
+
+      return () => clearTimeout(timeoutId);
     }
-
-    function formatDate(diffInMiliseconds: number) {
-      const hours = Math.floor(diffInMiliseconds / 1000 / 60 / 60);
-      const minutes = Math.floor(
-        (diffInMiliseconds / 1000 / 60 / 60 - hours) * 60
-      );
-      return `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
-    }
-
-    const timeoutId = setTimeout(() => {
-      const newDate = addSeconds(time, 1);
-      const dateDifferenceInMiliseconds =
-        newDate.getTime() - initialDate.getTime();
-      setTimePassed(formatDate(dateDifferenceInMiliseconds));
-      setTime(newDate);
-    }, 1000);
-
-    return () => clearTimeout(timeoutId);
-  }, [time]);
+  }, [time, continueTimer]);
 
   return (
     <div className="h-[100vh] bg-[#283618] flex relative">
@@ -111,7 +109,11 @@ function App() {
         <div className="text-[#fefae0] font-bold">{timePassed}</div>
         <h1 className="text-[#fefae0] -mt-2">Tiempo en la tarea</h1>
         <div className="flex gap-5 mt-6">
-          <button className="bg-[#dda15e] px-2 py-1 rounded-full text-[#fefae0] font-bold">
+          <button
+            className="bg-[#dda15e] px-2 py-1 rounded-full text-[#fefae0] font-bold"
+            onClick={() => {
+              setContinueTimer(false);
+            }}>
             Finalizar Sesion
           </button>
         </div>

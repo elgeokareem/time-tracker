@@ -5,10 +5,12 @@ export default function Modal({ changeModal }: { changeModal: React.Dispatch<Rea
           className="bg-[#f4a261] px-4 py-1 rounded-full mx-auto"
           onClick={() => changeModal(true)}
         >
-          Añadir/Editar tarea
+          Añadir/Quitar tarea
         </button>
         
         <span className="mt-5 text-2xl text-[#555] font-bold">Sesiones</span>
+
+        <div className="flex flex-col mt-3 text-xl"></div>
     </aside>
   )
 }
