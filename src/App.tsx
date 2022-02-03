@@ -1,15 +1,26 @@
 import { useEffect, useState } from "react";
 
+// Store
+import useStore from "./state/globalState";
+
 // Components
-import "react-clock/dist/Clock.css";
 import Clock from "react-clock";
 import Task from "./components/Task";
 import Log from "./components/Log";
 import Modal from "./components/Modal";
+import Menu from "./components/Menu";
+import AddTask from "./components/AddTask";
+import { CSSTransition } from "react-transition-group";
+
+// styles
+import "./components/AddTask.css";
+import "react-clock/dist/Clock.css";
 
 function App() {
-  // Estados tareas
-  const [tasks, setTasks] = useState(["Frico", "Crypto", "Personal", "Freelance", "Cursos"]);
+  // Store
+  const { tasks } = useStore((state) => state);
+  // Modals
+  const [showModal, setShowModal] = useState(false);
   // Estados para el tiempo
   const initialDate = new Date(2000, 1, 1, 0, 0, 0, 0);
   const [time, setTime] = useState(initialDate);
@@ -17,7 +28,7 @@ function App() {
   // Estados para el log
   const [log, setLog] = useState<any>([]);
 
-  function addTask(task?: string) {
+  function addTaskToLog(task?: string) {
     setLog((oldLog: any) => {
       return [...oldLog, { task, time: timePassed }];
     });
@@ -45,10 +56,6 @@ function App() {
       return acc;
     }, {});
 
-    // return uniqueTasksTime.map((item: any, index: number) => {
-    //   <div key={index}>{item}</div>
-    // })
-
     const uniqueKeys = Object.keys(uniqueTasksTime);
     return uniqueKeys.map((item: any, index: number) => {
       return (
@@ -70,9 +77,7 @@ function App() {
       const minutes = Math.floor(
         (diffInMiliseconds / 1000 / 60 / 60 - hours) * 60
       );
-      return `${hours < 10 ? "0" : ""}${hours}:${
-        minutes < 10 ? "0" : ""
-      }${minutes}`;
+      return `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
     }
 
     const timeoutId = setTimeout(() => {
@@ -87,13 +92,17 @@ function App() {
   }, [time]);
 
   return (
-    <div className="h-[100vh] bg-[#283618] flex">
+    <div className="h-[100vh] bg-[#283618] flex relative">
       {/* menu */}
-      <aside className="w-1/4 py-4 pl-3 bg-[#fefae0] h-100">
-        <button className="bg-[#f4a261] px-4 py-1 rounded-full mx-auto">
-          Sesiones
-        </button>
-      </aside>
+      <Menu changeModal={setShowModal} />
+      <CSSTransition
+        in={showModal}
+        timeout={300}
+        classNames="alert"
+        unmountOnExit
+      >
+        <AddTask changeModal={setShowModal} />
+      </CSSTransition>
 
       {/* main */}
       <main className="flex flex-col items-center w-full pt-10">
@@ -111,7 +120,7 @@ function App() {
           <section className="w-2/5 max-h-[300px]">
             <h2 className="text-2xl text-[#fefae0] font-bold">Tareas</h2>
             {tasks.map((task: string, index: number) => (
-              <Task key={index} onClick={addTask} task={task} />
+              <Task key={index} onClick={addTaskToLog} task={task} />
             ))}
           </section>
 
