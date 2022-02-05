@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 
 // Store
-import useStore from "./state/globalState";
+import useStoreTasks from "./state/tasks.state";
+import useStoreSessions from "./state/sessions.state";
 
 // Components
 import Clock from "react-clock";
@@ -17,11 +18,14 @@ import "./components/AddTask.css";
 import "react-clock/dist/Clock.css";
 
 // Helpers
-import { addSeconds, formatDate } from "./helpers/utils.helpers";
+import { addSeconds, formatDate, saveSession } from "./helpers/utils.helpers";
 
 function App() {
   // Store
-  const { tasks } = useStore((state) => state);
+  const { tasks } = useStoreTasks((state) => state);
+  const { session, initSessionStore, addSessionStore } = useStoreSessions((state) => state);
+  // Task
+  const [currentTask, setCurrentTask] = useState("");
   // Modals
   const [showModal, setShowModal] = useState(false);
   // Estados para el tiempo
@@ -30,16 +34,17 @@ function App() {
   const [timePassed, setTimePassed] = useState("00:00");
   const [continueTimer, setContinueTimer] = useState(false);
   // Estados para el log
-  const [log, setLog] = useState<any>([]);
-  // Estados sesion
-  const [session, setSession] = useState(false);
+  const [log, setLog] = useState<Array<{task: string; time: string}>>([]);
 
-  function addTaskToLog(task?: string) {
-    setLog((oldLog: any) => {
-      return [...oldLog, { task, time: timePassed }];
-    });
+  function addTaskToLog(task: string) {
+    if (timePassed !== "00:00") {
+      setLog((oldLog: any) => {
+        return [...oldLog, { task: currentTask, time: timePassed }];
+      });
+    }
 
-    setContinueTimer(() => true);
+    setContinueTimer(true);
+    setCurrentTask(task);
 
     // Reset el tiempo
     setTime(initialDate);
@@ -75,8 +80,11 @@ function App() {
   }
 
   useEffect(() => {
+    initSessionStore();
+  }, []);
+
+  useEffect(() => {
     if (continueTimer) {
-      console.log("entra al timer");
       const timeoutId = setInterval(() => {
         const newDate = addSeconds(time, 1);
         const dateDifferenceInMiliseconds =
@@ -104,14 +112,31 @@ function App() {
 
       {/* main */}
       <main className="flex flex-col items-center w-full pt-10">
-        <h2 className="text-[#fefae0] text-4xl mb-6">Inicia Sesión seleccionando una Tarea</h2>
+        {currentTask === "" ? (
+          <h2 className="text-[#fefae0] text-4xl mb-6">Inicia Sesión seleccionando una Tarea</h2>
+        ) : (
+          <h2 className="text-[#fefae0] text-4xl mb-6">{currentTask}</h2>
+        )}
         <Clock value={time} />
         <div className="text-[#fefae0] font-bold">{timePassed}</div>
         <h1 className="text-[#fefae0] -mt-2">Tiempo en la tarea</h1>
         <div className="flex gap-5 mt-6">
           <button
             className="bg-[#dda15e] px-2 py-1 rounded-full text-[#fefae0] font-bold"
+            onClick={() => setContinueTimer(true)}>
+            Reanudar
+          </button>
+          <button
+            className="bg-[#dda15e] px-2 py-1 rounded-full text-[#fefae0] font-bold"
+            onClick={() => setContinueTimer(false)}>
+            Pausa
+          </button>
+          <button
+            className="bg-[#dda15e] px-2 py-1 rounded-full text-[#fefae0] font-bold"
             onClick={() => {
+              saveSession([...log, { task: currentTask, time: timePassed }], addSessionStore);
+              setTime(initialDate);
+              setTimePassed("0");
               setContinueTimer(false);
             }}>
             Finalizar Sesion

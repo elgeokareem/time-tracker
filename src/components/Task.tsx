@@ -1,4 +1,4 @@
-export default function Task({ task, onClick }: { task: string, onClick: (task?: string) => void }) {
+export default function Task({ task, onClick }: { task: string, onClick: (task: string) => void }) {
   return (
     <div className="flex items-center my-4 w-full px-2 py-1 rounded-full border border-[#dda15e] text-[#fefae0] text-xs gap-5">
       <img src="https://picsum.photos/25" alt="" className="rounded-full" />

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import useStore from "../state/globalState";
+import useStore from "../state/tasks.state";
 
 export default function AddTask({ changeModal }: { changeModal: any }) {
   const { tasks, addTaskStore, removeTaskStore } = useStore((state) => state);
@@ -60,7 +60,8 @@ export default function AddTask({ changeModal }: { changeModal: any }) {
             {task}
 
             <div className="flex">
-              <svg
+              {/* TODO: EDIT TASKS */}
+              {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-6 h-6 cursor-pointer"
                 fill="none"
@@ -73,7 +74,7 @@ export default function AddTask({ changeModal }: { changeModal: any }) {
                   strokeWidth="2"
                   d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
                 />
-              </svg>
+              </svg> */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-6 h-6 cursor-pointer"

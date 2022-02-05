@@ -1,16 +1,11 @@
 import create from 'zustand';
-
-interface ITypes {
-  tasks: Array<string>;
-  addTaskStore: (task: string) => void;
-  removeTaskStore: (task: string) => void;
-}
+import type { ITasks } from '../types/types.types';
 
 const prevState = JSON.parse(localStorage.getItem('tasks') || '[]');
 
 // Global state
-const useStore = create<ITypes>((set) => ({
-  tasks: [prevState],
+const useStoreTasks = create<ITasks>((set) => ({
+  tasks: [...prevState],
   addTaskStore: (newTask) => set(state => {
     const newTasks = [...state.tasks, newTask];
     localStorage.setItem('tasks', JSON.stringify(newTasks));
@@ -23,4 +18,4 @@ const useStore = create<ITypes>((set) => ({
   }),
 }))
 
-export default useStore;
+export default useStoreTasks;
