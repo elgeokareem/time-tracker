@@ -8,26 +8,34 @@ import useStoreSessions from "./state/sessions.state";
 import Clock from "react-clock";
 import Task from "./components/Task";
 import Log from "./components/Log";
-import Modal from "./components/Modal";
 import Menu from "./components/Menu";
 import AddTask from "./components/AddTask";
+import SessionDetail from "./components/SessionDetail";
 import { CSSTransition } from "react-transition-group";
 
 // styles
 import "./components/AddTask.css";
+import "./components/SessionDetail.css";
 import "react-clock/dist/Clock.css";
 
 // Helpers
 import { addSeconds, formatDate, saveSession } from "./helpers/utils.helpers";
 
+// Types
+import { ISessionObject } from "./types/types.types";
+
 function App() {
   // Store
   const { tasks } = useStoreTasks((state) => state);
-  const { session, initSessionStore, addSessionStore } = useStoreSessions((state) => state);
+  const { sessions, initSessionStore, addSessionStore } = useStoreSessions((state) => state);
   // Task
   const [currentTask, setCurrentTask] = useState("");
   // Modals
-  const [showModal, setShowModal] = useState(false);
+  const [showModalTasks, setShowModalTasks] = useState(false);
+  const [showModalDetailSession, setShowModalDetailSession] = useState(false);
+  // Session Name
+  const [sessionName, setSessionName] = useState("");
+  const [sessionData, setSessionData] = useState<ISessionObject>({ name: "", date: "", details: [ {task: "", time: ""} ] });
   // Estados para el tiempo
   const initialDate = new Date(2000, 1, 1, 0, 0, 0, 0);
   const [time, setTime] = useState(initialDate);
@@ -100,14 +108,30 @@ function App() {
   return (
     <div className="h-[100vh] bg-[#283618] flex relative">
       {/* menu */}
-      <Menu changeModal={setShowModal} />
+      <Menu
+        changeModalTasks={setShowModalTasks}
+        changeModalSessionDetails={setShowModalDetailSession}
+        setSessionDetails={setSessionData}
+      />
       <CSSTransition
-        in={showModal}
+        in={showModalTasks}
         timeout={300}
-        classNames="alert"
+        classNames="tasks"
         unmountOnExit
       >
-        <AddTask changeModal={setShowModal} />
+        <AddTask changeModal={setShowModalTasks} />
+      </CSSTransition>
+
+      <CSSTransition
+        in={showModalDetailSession}
+        timeout={300}
+        classNames="session-details"
+        unmountOnExit
+      >
+        <SessionDetail
+          sessionData={sessionData}
+          setModal={setShowModalDetailSession}
+        />
       </CSSTransition>
 
       {/* main */}
@@ -120,6 +144,13 @@ function App() {
         <Clock value={time} />
         <div className="text-[#fefae0] font-bold">{timePassed}</div>
         <h1 className="text-[#fefae0] -mt-2">Tiempo en la tarea</h1>
+        <input
+          type="text"
+          placeholder="Nombre Sesión"
+          value={sessionName}
+          className="px-2 py-1 text-[#333] border border-[#dda15e] rounded-lg focus:outline-none focus:shadow-outline"
+          onChange={(e) => setSessionName(e.target.value)}
+        />
         <div className="flex gap-5 mt-6">
           <button
             className="bg-[#dda15e] px-2 py-1 rounded-full text-[#fefae0] font-bold"
@@ -134,10 +165,13 @@ function App() {
           <button
             className="bg-[#dda15e] px-2 py-1 rounded-full text-[#fefae0] font-bold"
             onClick={() => {
-              saveSession([...log, { task: currentTask, time: timePassed }], addSessionStore);
+              saveSession([...log, { task: currentTask, time: timePassed }], addSessionStore, sessionName);
               setTime(initialDate);
               setTimePassed("0");
+              setCurrentTask("");
               setContinueTimer(false);
+              setLog([]);
+              setSessionName("");
             }}>
             Finalizar Sesion
           </button>

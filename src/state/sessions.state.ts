@@ -3,19 +3,19 @@ import localForage from "localforage";
 import type { ISessions } from '../types/types.types';
 
 const useStoreSessions = create<ISessions>((set) => ({
-  session: [],
+  sessions: [],
   initSessionStore: async () => {
-    const prevState = await localForage.getItem('sessions') as ISessions["session"];
+    const prevState = await localForage.getItem('sessions') as ISessions["sessions"];
     set(state => {
-      return { session: prevState ?? [] };
+      return { sessions: prevState ?? [] };
     });
   },
   addSessionStore: async (session) => {
     set((state) => {
-      const newSessions = [...state.session, session];
+      const newSessions = [...state.sessions, session];
       localForage.setItem('sessions', newSessions);
       return {
-        session: newSessions
+        sessions: newSessions
       };
     });
   },

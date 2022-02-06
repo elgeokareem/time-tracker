@@ -1,16 +1,16 @@
-.tasks-enter {
+.session-details-enter {
   opacity: 0;
   transform: translateX(0);
 }
-.tasks-enter-active {
+.session-details-enter-active {
   opacity: 1;
   transform: translateX(0);
   transition: opacity 300ms, transform 300ms;
 }
-.tasks-exit {
+.session-details-exit {
   opacity: 1;
 }
-.tasks-exit-active {
+.session-details-exit-active {
   opacity: 0;
   transition: opacity 300ms, transform 300ms;
 }

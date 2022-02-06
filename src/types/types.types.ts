@@ -6,13 +6,13 @@ export interface ITasks {
 }
 
 export interface ISessions {
-  session: Array<ISessionObject>;
+  sessions: Array<ISessionObject>;
   initSessionStore: () => Promise<void>;
   addSessionStore: (session: ISessionObject) => void;
 }
 
 export interface ISessionObject {
-  name?: string;
+  name: string;
   date: string;
-  details: Array<{ name: string; duration: string }>;
+  details: Array<{ task: string; time: string }>;
 }
