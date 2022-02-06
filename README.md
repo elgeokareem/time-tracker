@@ -7,3 +7,10 @@ pnpm build
 pnpm preview.  
 
 Using: Vite, React, Zustand, Tailwind.
+
+## Want to use npm instead of pnpm?  
+Just delete pnpm-lock.yaml file and run npm install then run
+
+npm run dev  
+npm run build  
+npm run preview.  
