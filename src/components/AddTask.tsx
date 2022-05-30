@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef } from "react";
 import useStore from "../state/tasks.state";
 
-export default function AddTask({ changeModal }: { changeModal: any }) {
-  const { tasks, addTaskStore, removeTaskStore } = useStore((state) => state);
+function AddTask({ changeModal }: { changeModal: any }, ref: any) {
+  const { tasks, addTaskStore, removeTaskStore } = useStore(state => state);
   const [task, setTask] = useState("");
 
   useEffect(() => {}, [setTask]);
 
   return (
-    <aside className="w-1/4 max-w-[300px] flex-none py-4 px-3 bg-[#fefae0] h-[100vh] absolute flex flex-col">
+    <aside
+      className="w-1/4 max-w-[300px] flex-none py-4 px-3 bg-[#fefae0] h-[100vh] absolute flex flex-col"
+      ref={ref}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="w-5 h-5 ml-auto text-2xl cursor-pointer"
@@ -30,8 +33,8 @@ export default function AddTask({ changeModal }: { changeModal: any }) {
           type="text"
           value={task}
           className="px-2 py-1 border border-gray-500 rounded-lg"
-          onChange={(e) => setTask(e.target.value)}
-          onKeyDown={(e) => {
+          onChange={e => setTask(e.target.value)}
+          onKeyDown={e => {
             if (e.key === "Enter") {
               addTaskStore(task);
               setTask("");
@@ -81,3 +84,5 @@ export default function AddTask({ changeModal }: { changeModal: any }) {
     </aside>
   );
 }
+
+export default forwardRef(AddTask);

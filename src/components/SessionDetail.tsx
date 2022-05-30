@@ -1,17 +1,24 @@
+import { forwardRef } from "react";
 import { sumTime } from "../helpers/utils.helpers";
 import type { ISessionObject } from "../types/types.types";
 
-export default function SessionDetail({
-  sessionData,
-  setModal
-}: {
-  sessionData: ISessionObject;
-  setModal: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+function SessionDetail(
+  {
+    sessionData,
+    setModal
+  }: {
+    sessionData: ISessionObject;
+    setModal: React.Dispatch<React.SetStateAction<boolean>>;
+  },
+  ref: any
+) {
   const timeEachTask = sessionData.details.map(item => item.time);
 
   return (
-    <aside className="w-1/4 max-w-[300px] flex-none py-4 px-3 bg-[#fefae0] h-[100vh] absolute flex flex-col">
+    <aside
+      className="w-1/4 max-w-[300px] flex-none py-4 px-3 bg-[#fefae0] h-[100vh] absolute flex flex-col"
+      ref={ref}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="w-5 h-5 ml-auto text-2xl cursor-pointer"
@@ -42,3 +49,5 @@ export default function SessionDetail({
     </aside>
   );
 }
+
+export default forwardRef(SessionDetail);

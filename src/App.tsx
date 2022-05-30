@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 // Store
 import useStoreTasks from "./state/tasks.state";
@@ -26,8 +26,10 @@ import { ISessionObject } from "./types/types.types";
 
 function App() {
   // Store
-  const { tasks } = useStoreTasks((state) => state);
-  const { sessions, initSessionStore, addSessionStore } = useStoreSessions((state) => state);
+  const { tasks } = useStoreTasks(state => state);
+  const { sessions, initSessionStore, addSessionStore } = useStoreSessions(
+    state => state
+  );
   // Task
   const [currentTask, setCurrentTask] = useState("");
   // Modals
@@ -35,14 +37,21 @@ function App() {
   const [showModalDetailSession, setShowModalDetailSession] = useState(false);
   // Session Name
   const [sessionName, setSessionName] = useState("");
-  const [sessionData, setSessionData] = useState<ISessionObject>({ name: "", date: "", details: [ {task: "", time: ""} ] });
+  const [sessionData, setSessionData] = useState<ISessionObject>({
+    name: "",
+    date: "",
+    details: [{ task: "", time: "" }]
+  });
   // Estados para el tiempo
   const initialDate = new Date(2000, 1, 1, 0, 0, 0, 0);
   const [time, setTime] = useState(initialDate);
   const [timePassed, setTimePassed] = useState("00:00");
   const [continueTimer, setContinueTimer] = useState(false);
   // Estados para el log
-  const [log, setLog] = useState<Array<{task: string; time: string}>>([]);
+  const [log, setLog] = useState<Array<{ task: string; time: string }>>([]);
+  // Refs para quitar errores en react transition group
+  const addTaskRef = useRef(null);
+  const sessionDetailRef = useRef(null);
 
   function addTaskToLog(task: string) {
     if (timePassed !== "00:00") {
@@ -70,7 +79,9 @@ function App() {
         if (newMinutes >= 60) {
           newHours += 1;
         }
-        acc[curr.task] = `${newHours < 10 ? "0" : ""}${newHours}:${newMinutes < 10 ? "0" : ""}${newMinutes}`;
+        acc[curr.task] = `${newHours < 10 ? "0" : ""}${newHours}:${
+          newMinutes < 10 ? "0" : ""
+        }${newMinutes}`;
       } else {
         acc[curr.task] = curr.time;
       }
@@ -81,7 +92,9 @@ function App() {
     return uniqueKeys.map((item: any, index: number) => {
       return (
         <div key={index} className="font-normal">
-          <p>{item} {uniqueTasksTime[item]}</p>
+          <p>
+            {item} {uniqueTasksTime[item]}
+          </p>
         </div>
       );
     });
@@ -118,8 +131,9 @@ function App() {
         timeout={300}
         classNames="tasks"
         unmountOnExit
+        nodeRef={addTaskRef}
       >
-        <AddTask changeModal={setShowModalTasks} />
+        <AddTask changeModal={setShowModalTasks} ref={addTaskRef} />
       </CSSTransition>
 
       <CSSTransition
@@ -127,17 +141,21 @@ function App() {
         timeout={300}
         classNames="session-details"
         unmountOnExit
+        nodeRef={sessionDetailRef}
       >
         <SessionDetail
           sessionData={sessionData}
           setModal={setShowModalDetailSession}
+          ref={sessionDetailRef}
         />
       </CSSTransition>
 
       {/* main */}
       <main className="flex flex-col items-center w-full pt-10">
         {currentTask === "" ? (
-          <h2 className="text-[#fefae0] text-4xl mb-6">Inicia Sesión seleccionando una Tarea</h2>
+          <h2 className="text-[#fefae0] text-4xl mb-6">
+            Inicia Sesión seleccionando una Tarea
+          </h2>
         ) : (
           <h2 className="text-[#fefae0] text-4xl mb-6">{currentTask}</h2>
         )}
@@ -149,30 +167,37 @@ function App() {
           placeholder="Nombre Sesión"
           value={sessionName}
           className="px-2 py-1 text-[#333] border border-[#dda15e] rounded-lg focus:outline-none focus:shadow-outline"
-          onChange={(e) => setSessionName(e.target.value)}
+          onChange={e => setSessionName(e.target.value)}
         />
         <div className="flex gap-5 mt-6">
           <button
             className="bg-[#dda15e] px-2 py-1 rounded-full text-[#fefae0] font-bold"
-            onClick={() => setContinueTimer(true)}>
+            onClick={() => setContinueTimer(true)}
+          >
             Reanudar
           </button>
           <button
             className="bg-[#dda15e] px-2 py-1 rounded-full text-[#fefae0] font-bold"
-            onClick={() => setContinueTimer(false)}>
+            onClick={() => setContinueTimer(false)}
+          >
             Pausa
           </button>
           <button
             className="bg-[#dda15e] px-2 py-1 rounded-full text-[#fefae0] font-bold"
             onClick={() => {
-              saveSession([...log, { task: currentTask, time: timePassed }], addSessionStore, sessionName);
+              saveSession(
+                [...log, { task: currentTask, time: timePassed }],
+                addSessionStore,
+                sessionName
+              );
               setTime(initialDate);
               setTimePassed("0");
               setCurrentTask("");
               setContinueTimer(false);
               setLog([]);
               setSessionName("");
-            }}>
+            }}
+          >
             Finalizar Sesion
           </button>
         </div>
