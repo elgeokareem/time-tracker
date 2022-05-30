@@ -172,7 +172,9 @@ function App() {
         <div className="flex gap-5 mt-6">
           <button
             className="bg-[#dda15e] px-2 py-1 rounded-full text-[#fefae0] font-bold"
-            onClick={() => setContinueTimer(true)}
+            onClick={() => {
+              setContinueTimer(true);
+            }}
           >
             Reanudar
           </button>
@@ -204,7 +206,7 @@ function App() {
         <div className="flex justify-center w-full gap-5 px-5 mt-5">
           {/* Izquierda */}
           <section className="w-2/5 max-h-[300px]">
-            <h2 className="text-2xl text-[#fefae0] font-bold">Tareas</h2>
+            <h2 className="text-2xl text-[#fefae0] font-bold">Actividades</h2>
             {tasks.map((task: string, index: number) => (
               <Task key={index} onClick={addTaskToLog} task={task} />
             ))}
