@@ -1,12 +1,14 @@
 import { sumTime } from "../helpers/utils.helpers";
-import type { ISessionObject } from "../types/types.types"
+import type { ISessionObject } from "../types/types.types";
 
-export default function SessionDetail({sessionData, setModal}: {
-  sessionData: ISessionObject,
-  setModal: React.Dispatch<React.SetStateAction<boolean>>
-}
-  ) {
-  const timeEachTask = sessionData.details.map((item) => item.time);
+export default function SessionDetail({
+  sessionData,
+  setModal
+}: {
+  sessionData: ISessionObject;
+  setModal: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const timeEachTask = sessionData.details.map(item => item.time);
 
   return (
     <aside className="w-1/4 max-w-[300px] flex-none py-4 px-3 bg-[#fefae0] h-[100vh] absolute flex flex-col">
@@ -25,15 +27,17 @@ export default function SessionDetail({sessionData, setModal}: {
       </svg>
 
       <div className="text-[#444] text-2xl text-center">{sessionData.name}</div>
-      <div className="text-[#444] text-center mb-6">Total: {sumTime(timeEachTask)}</div>
+      <div className="text-[#444] text-center mb-6">
+        Total: {sumTime(timeEachTask)}
+      </div>
 
-      {sessionData.details.map(item => {
+      {sessionData.details.map((item, id) => {
         return (
-          <div className="flex justify-between text-[#555]">
+          <div className="flex justify-between text-[#555]" key={id}>
             <div>{item.task}</div>
             <div>{item.time}</div>
           </div>
-        )
+        );
       })}
     </aside>
   );
