@@ -12,11 +12,13 @@ import Menu from "./components/Menu";
 import AddTask from "./components/AddTask";
 import SessionDetail from "./components/SessionDetail";
 import { CSSTransition } from "react-transition-group";
+import { ToastContainer, toast } from "react-toastify";
 
 // styles
 import "./components/AddTask.css";
 import "./components/SessionDetail.css";
 import "react-clock/dist/Clock.css";
+import "react-toastify/dist/ReactToastify.css";
 
 // Helpers
 import { addSeconds, formatDate, saveSession } from "./helpers/utils.helpers";
@@ -35,7 +37,8 @@ function App() {
   // Modals
   const [showModalTasks, setShowModalTasks] = useState(false);
   const [showModalDetailSession, setShowModalDetailSession] = useState(false);
-  // Session Name
+  // Session
+  const [activeSession, setActiveSession] = useState(false);
   const [sessionName, setSessionName] = useState("");
   const [sessionData, setSessionData] = useState<ISessionObject>({
     name: "",
@@ -48,28 +51,25 @@ function App() {
   const [timePassed, setTimePassed] = useState("00:00");
   const [continueTimer, setContinueTimer] = useState(false);
   // Estados para el log
-  const [log, setLog] = useState<Array<{ task: string; time: string }>>([]);
+  const [log, setLog] = useState<ISessionObject["details"]>([]);
   // Refs para quitar errores en react transition group
   const addTaskRef = useRef(null);
   const sessionDetailRef = useRef(null);
 
   function addTaskToLog(task: string) {
-    if (timePassed !== "00:00") {
-      setLog((oldLog: any) => {
-        return [...oldLog, { task: currentTask, time: timePassed }];
-      });
-    }
+    setLog((oldLog: ISessionObject["details"]) => {
+      return [...oldLog, { task: currentTask, time: timePassed }];
+    });
 
     setContinueTimer(true);
     setCurrentTask(task);
 
     // Reset el tiempo
     setTime(initialDate);
-    setTimePassed("0");
+    setTimePassed("00:00");
   }
 
   function summary() {
-    // <div>Task: 00:00</div>
     const uniqueTasksTime = log.reduce((acc: any, curr: any) => {
       if (acc[curr.task]) {
         const [currHours, currMinutes] = curr.time.split(":");
@@ -79,8 +79,8 @@ function App() {
         if (newMinutes >= 60) {
           newHours += 1;
         }
-        acc[curr.task] = `${newHours < 10 ? "0" : ""}${newHours}:${
-          newMinutes < 10 ? "0" : ""
+        acc[curr.task] = `${newHours < 10 ? "00:00" : ""}${newHours}:${
+          newMinutes < 10 ? "00:00" : ""
         }${newMinutes}`;
       } else {
         acc[curr.task] = curr.time;
@@ -173,7 +173,11 @@ function App() {
           <button
             className="bg-[#dda15e] px-2 py-1 rounded-full text-[#fefae0] font-bold"
             onClick={() => {
-              setContinueTimer(true);
+              if (activeSession) {
+                setContinueTimer(true);
+              }
+
+              toast.info(`Inicia una sesión pulsando "Iniciar Tarea" 🙂`);
             }}
           >
             Reanudar
@@ -193,11 +197,12 @@ function App() {
                 sessionName
               );
               setTime(initialDate);
-              setTimePassed("0");
+              setTimePassed("00:00");
               setCurrentTask("");
               setContinueTimer(false);
               setLog([]);
               setSessionName("");
+              setActiveSession(false);
             }}
           >
             Finalizar Sesion
@@ -208,7 +213,13 @@ function App() {
           <section className="w-2/5 max-h-[300px]">
             <h2 className="text-2xl text-[#fefae0] font-bold">Actividades</h2>
             {tasks.map((task: string, index: number) => (
-              <Task key={index} onClick={addTaskToLog} task={task} />
+              <Task
+                key={index}
+                addTaskToLog={addTaskToLog}
+                task={task}
+                setActiveSession={setActiveSession}
+                sessionName={sessionName}
+              />
             ))}
           </section>
 
@@ -217,9 +228,12 @@ function App() {
             <h2 className="text-2xl text-[#fefae0] font-bold">
               Log de progreso
             </h2>
-            {log.map((item: any, index: number) => (
-              <Log key={index} task={item.task} time={item.time} />
-            ))}
+            {log.map((item: ISessionObject["details"][0], index: number) => {
+              if (index === 0) {
+                return <Log key={index} task={currentTask} time={timePassed} />;
+              }
+              return <Log key={index} task={item.task} time={item.time} />;
+            })}
           </section>
         </div>
 
@@ -228,6 +242,8 @@ function App() {
           {summary()}
         </section>
       </main>
+
+      <ToastContainer />
     </div>
   );
 }
