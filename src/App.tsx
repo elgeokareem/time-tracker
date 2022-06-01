@@ -1,5 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 
+// PWA
+import { useRegisterSW } from "virtual:pwa-register/react";
+
 // Store
 import useStoreTasks from "./state/tasks.state";
 import useStoreSessions from "./state/sessions.state";
@@ -27,6 +30,16 @@ import { addSeconds, formatDate, saveSession } from "./helpers/utils.helpers";
 import { ISessionObject } from "./types/types.types";
 
 function App() {
+  // PWA
+  const {
+    offlineReady: [offlineReady, setOfflineReady]
+  } = useRegisterSW({
+    immediate: true,
+    onRegisterError(error) {
+      console.error("register error in App", error);
+    }
+  });
+
   // Store
   const { tasks } = useStoreTasks(state => state);
   const { sessions, initSessionStore, addSessionStore } = useStoreSessions(
@@ -102,6 +115,10 @@ function App() {
 
   useEffect(() => {
     initSessionStore();
+
+    console.log("offlineReady", offlineReady);
+    setOfflineReady(() => true);
+    console.log("offlineReady", offlineReady);
   }, []);
 
   useEffect(() => {
@@ -191,6 +208,10 @@ function App() {
           <button
             className="bg-[#dda15e] px-2 py-1 rounded-full text-[#fefae0] font-bold"
             onClick={() => {
+              if (!activeSession) {
+                toast.error("Primero debe iniciar una sesión :)");
+                return;
+              }
               saveSession(
                 [...log, { task: currentTask, time: timePassed }],
                 addSessionStore,
