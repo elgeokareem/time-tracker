@@ -70,8 +70,9 @@ function App() {
   const sessionDetailRef = useRef(null);
 
   function addTaskToLog(task: string) {
+    console.log(task);
     setLog((oldLog: ISessionObject["details"]) => {
-      return [...oldLog, { task: currentTask, time: timePassed }];
+      return [...oldLog, { task, time: timePassed }];
     });
 
     setContinueTimer(true);
@@ -83,26 +84,41 @@ function App() {
   }
 
   function summary() {
-    const uniqueTasksTime = log.reduce((acc: any, curr: any) => {
-      if (acc[curr.task]) {
-        const [currHours, currMinutes] = curr.time.split(":");
-        const [accHours, accMinutes] = acc[curr.task].split(":");
-        let newHours = parseInt(currHours) + parseInt(accHours);
-        let newMinutes = Number(currMinutes) + Number(accMinutes);
-        if (newMinutes >= 60) {
-          newHours += 1;
+    const uniqueTasksTime = log.reduce(
+      (
+        acc: Record<string, string>,
+        curr: ISessionObject["details"][number]
+      ) => {
+        if (acc[curr.task]) {
+          const [currHours, currMinutes] = curr.time.split(":");
+          const [accHours, accMinutes] = acc[curr.task].split(":");
+          let newHours = parseInt(currHours) + parseInt(accHours);
+          let newMinutes = Number(currMinutes) + Number(accMinutes);
+          if (newMinutes >= 60) {
+            newHours += 1;
+          }
+          acc[curr.task] = `${newHours < 10 ? "00:00" : ""}${newHours}:${
+            newMinutes < 10 ? "00:00" : ""
+          }${newMinutes}`;
+        } else {
+          acc[curr.task] = curr.time;
         }
-        acc[curr.task] = `${newHours < 10 ? "00:00" : ""}${newHours}:${
-          newMinutes < 10 ? "00:00" : ""
-        }${newMinutes}`;
-      } else {
-        acc[curr.task] = curr.time;
-      }
-      return acc;
-    }, {});
+        return acc;
+      },
+      {}
+    );
 
     const uniqueKeys = Object.keys(uniqueTasksTime);
     return uniqueKeys.map((item: any, index: number) => {
+      if (index === 0) {
+        return (
+          <div key={index} className="font-normal">
+            <p>
+              {item} {timePassed}
+            </p>
+          </div>
+        );
+      }
       return (
         <div key={index} className="font-normal">
           <p>
