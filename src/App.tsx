@@ -28,7 +28,8 @@ import {
   addSeconds,
   formatDate,
   saveSession,
-  reverseArray
+  reverseArray,
+  sumTime
 } from "./helpers/utils.helpers";
 
 // Types
@@ -75,8 +76,11 @@ function App() {
   const sessionDetailRef = useRef(null);
 
   function addTaskToLog(task: string) {
-    console.log(task);
     setLog((oldLog: ISessionObject["details"]) => {
+      if (oldLog.length) {
+        oldLog[oldLog.length - 1].time = timePassed;
+      }
+
       return [...oldLog, { task, time: timePassed }];
     });
 
@@ -87,6 +91,11 @@ function App() {
     setTime(initialDate);
     setTimePassed("00:00");
   }
+
+  useEffect(() => {
+    initSessionStore();
+    setOfflineReady(() => true);
+  }, []);
 
   function summary() {
     const uniqueTasksTime = log.reduce(
@@ -133,14 +142,6 @@ function App() {
       );
     });
   }
-
-  useEffect(() => {
-    initSessionStore();
-
-    console.log("offlineReady", offlineReady);
-    setOfflineReady(() => true);
-    console.log("offlineReady", offlineReady);
-  }, []);
 
   useEffect(() => {
     if (continueTimer) {
@@ -234,17 +235,15 @@ function App() {
                 toast.error("Primero debe iniciar una sesión :)");
                 return;
               }
-              saveSession(
-                [...log, { task: currentTask, time: timePassed }],
-                addSessionStore,
-                sessionName
-              );
-              setTime(initialDate);
-              setTimePassed("00:00");
-              setCurrentTask("");
-              setContinueTimer(false);
+
+              log[log.length - 1].time = timePassed;
+              saveSession(log, addSessionStore, sessionName);
               setLog([]);
+              setTime(initialDate);
+              setCurrentTask("");
               setSessionName("");
+              setTimePassed("00:00");
+              setContinueTimer(false);
               setActiveSession(false);
             }}
           >
@@ -285,7 +284,17 @@ function App() {
         </div>
 
         <section className="text-[#fefae0] w-4/5 mt-3 font-bold">
-          <h2 className="text-2xl">Total de la sesión</h2>
+          <h2 className="text-2xl">
+            Total de la sesión:{" "}
+            {sumTime(
+              log.map((item, index) => {
+                if (index === log.length - 1) {
+                  return (log[log.length - 1].time = timePassed);
+                }
+                return item.time;
+              })
+            )}
+          </h2>
           {summary()}
         </section>
       </main>

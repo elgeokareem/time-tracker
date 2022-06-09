@@ -58,7 +58,7 @@ export function sumTime(timeArray: string[]) {
   const hoursInHours = Math.floor(hoursInMinutes / 60);
   const minutes = hoursInMinutes % 60;
   if (hoursInHours === 0) {
-    return `${minutes} minutes`;
+    return `${minutes} minutos`;
   }
   return `${hoursInHours}:${minutes}`;
 }
