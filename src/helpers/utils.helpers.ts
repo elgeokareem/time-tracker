@@ -65,8 +65,11 @@ export function sumTime(timeArray: string[]) {
 
 export function reverseArray(arr: any[]) {
   const reversedArray: any[] = [];
-  for (let i = arr.length - 1; i >= 0; i--) {
-    reversedArray.push(arr[i]);
+  const newArrStr = JSON.stringify(arr);
+  const newArr = JSON.parse(newArrStr);
+
+  for (let i = newArr.length - 1; i >= 0; i--) {
+    reversedArray.push(newArr[i]);
   }
   return reversedArray;
 }
