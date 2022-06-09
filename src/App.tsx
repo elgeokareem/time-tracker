@@ -208,6 +208,7 @@ function App() {
             onClick={() => {
               if (activeSession) {
                 setContinueTimer(true);
+                return;
               }
 
               toast.info(`Inicia una sesión pulsando "Iniciar Tarea" 🙂`);
