@@ -24,7 +24,12 @@ import "react-clock/dist/Clock.css";
 import "react-toastify/dist/ReactToastify.css";
 
 // Helpers
-import { addSeconds, formatDate, saveSession } from "./helpers/utils.helpers";
+import {
+  addSeconds,
+  formatDate,
+  saveSession,
+  reverseArray
+} from "./helpers/utils.helpers";
 
 // Types
 import { ISessionObject } from "./types/types.types";
@@ -266,12 +271,16 @@ function App() {
             <h2 className="text-2xl text-[#fefae0] font-bold">
               Log de progreso
             </h2>
-            {log.map((item: ISessionObject["details"][0], index: number) => {
-              if (index === 0) {
-                return <Log key={index} task={currentTask} time={timePassed} />;
+            {reverseArray(log).map(
+              (item: ISessionObject["details"][0], index: number) => {
+                if (index === 0) {
+                  return (
+                    <Log key={index} task={currentTask} time={timePassed} />
+                  );
+                }
+                return <Log key={index} task={item.task} time={item.time} />;
               }
-              return <Log key={index} task={item.task} time={item.time} />;
-            })}
+            )}
           </section>
         </div>
 
