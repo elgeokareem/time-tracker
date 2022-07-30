@@ -3,10 +3,12 @@ lockfileVersion: 5.4
 specifiers:
   '@headlessui/react': ^1.6.4
   '@heroicons/react': ^1.0.6
+  '@react-spring/web': ^9.4.5
   '@types/react': ^18.0.9
   '@types/react-clock': ^3.0.1
   '@types/react-dom': ^18.0.5
   '@types/react-transition-group': ^4.4.4
+  '@use-gesture/react': ^10.2.15
   '@vitejs/plugin-react': ^1.3.2
   autoprefixer: ^10.4.7
   i: ^0.3.7
@@ -23,17 +25,21 @@ specifiers:
   vite: ^2.9.9
   vite-plugin-pwa: ^0.12.0
   workbox-window: ^6.5.3
+  worker-timers: ^7.0.51
   zustand: 4.0.0-rc.1
 
 dependencies:
   '@headlessui/react': 1.6.4_ef5jwxihqo6n7gxfmzogljlgcm
   '@heroicons/react': 1.0.6_react@18.1.0
+  '@react-spring/web': 9.4.5_ef5jwxihqo6n7gxfmzogljlgcm
+  '@use-gesture/react': 10.2.15_react@18.1.0
   localforage: 1.10.0
   react: 18.1.0
   react-clock: 3.1.0_ef5jwxihqo6n7gxfmzogljlgcm
   react-dom: 18.1.0_react@18.1.0
   react-toastify: 9.0.2_ef5jwxihqo6n7gxfmzogljlgcm
   react-transition-group: 4.4.2_ef5jwxihqo6n7gxfmzogljlgcm
+  worker-timers: 7.0.51
   zustand: 4.0.0-rc.1_react@18.1.0
 
 devDependencies:
@@ -1222,6 +1228,13 @@ packages:
     dependencies:
       regenerator-runtime: 0.13.9
 
+  /@babel/runtime/7.18.9:
+    resolution: {integrity: sha512-lkqXDcvlFT5rvEjiu6+QYO+1GXrEHRo2LOtS7E4GtX5ESIZOgepqsZBVIj6Pv+a6zqsya9VCgiK1KAK4BvJDAw==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.13.9
+    dev: false
+
   /@babel/template/7.16.7:
     resolution: {integrity: sha512-I8j/x8kHUrbYRTUxXrrMbfCa7jxkE7tZre39x3kjr9hvI82cK1FfqLygotcWN5kdPGWcLdWMHpSBavse5tWw3w==}
     engines: {node: '>=6.9.0'}
@@ -1341,6 +1354,60 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.13.0
     dev: true
+
+  /@react-spring/animated/9.4.5_react@18.1.0:
+    resolution: {integrity: sha512-KWqrtvJSMx6Fj9nMJkhTwM9r6LIriExDRV6YHZV9HKQsaolUFppgkOXpC+rsL1JEtEvKv6EkLLmSqHTnuYjiIA==}
+    peerDependencies:
+      react: ^16.8.0  || >=17.0.0 || >=18.0.0
+    dependencies:
+      '@react-spring/shared': 9.4.5_react@18.1.0
+      '@react-spring/types': 9.4.5
+      react: 18.1.0
+    dev: false
+
+  /@react-spring/core/9.4.5_react@18.1.0:
+    resolution: {integrity: sha512-83u3FzfQmGMJFwZLAJSwF24/ZJctwUkWtyPD7KYtNagrFeQKUH1I05ZuhmCmqW+2w1KDW1SFWQ43RawqfXKiiQ==}
+    peerDependencies:
+      react: ^16.8.0  || >=17.0.0 || >=18.0.0
+    dependencies:
+      '@react-spring/animated': 9.4.5_react@18.1.0
+      '@react-spring/rafz': 9.4.5
+      '@react-spring/shared': 9.4.5_react@18.1.0
+      '@react-spring/types': 9.4.5
+      react: 18.1.0
+    dev: false
+
+  /@react-spring/rafz/9.4.5:
+    resolution: {integrity: sha512-swGsutMwvnoyTRxvqhfJBtGM8Ipx6ks0RkIpNX9F/U7XmyPvBMGd3GgX/mqxZUpdlsuI1zr/jiYw+GXZxAlLcQ==}
+    dev: false
+
+  /@react-spring/shared/9.4.5_react@18.1.0:
+    resolution: {integrity: sha512-JhMh3nFKsqyag0KM5IIM8BQANGscTdd0mMv3BXsUiMZrcjQTskyfnv5qxEeGWbJGGar52qr5kHuBHtCjQOzniA==}
+    peerDependencies:
+      react: ^16.8.0  || >=17.0.0 || >=18.0.0
+    dependencies:
+      '@react-spring/rafz': 9.4.5
+      '@react-spring/types': 9.4.5
+      react: 18.1.0
+    dev: false
+
+  /@react-spring/types/9.4.5:
+    resolution: {integrity: sha512-mpRIamoHwql0ogxEUh9yr4TP0xU5CWyZxVQeccGkHHF8kPMErtDXJlxyo0lj+telRF35XNihtPTWoflqtyARmg==}
+    dev: false
+
+  /@react-spring/web/9.4.5_ef5jwxihqo6n7gxfmzogljlgcm:
+    resolution: {integrity: sha512-NGAkOtKmOzDEctL7MzRlQGv24sRce++0xAY7KlcxmeVkR7LRSGkoXHaIfm9ObzxPMcPHQYQhf3+X9jepIFNHQA==}
+    peerDependencies:
+      react: ^16.8.0  || >=17.0.0 || >=18.0.0
+      react-dom: ^16.8.0  || >=17.0.0 || >=18.0.0
+    dependencies:
+      '@react-spring/animated': 9.4.5_react@18.1.0
+      '@react-spring/core': 9.4.5_react@18.1.0
+      '@react-spring/shared': 9.4.5_react@18.1.0
+      '@react-spring/types': 9.4.5
+      react: 18.1.0
+      react-dom: 18.1.0_react@18.1.0
+    dev: false
 
   /@rollup/plugin-babel/5.3.1_qhxjqw33rawdn3amxsgyn5mkfy:
     resolution: {integrity: sha512-WFfdLWU/xVWKeRQnKmIAQULUI7Il0gZnBIH/ZFO069wYIfPu+8zrfp/KMW0atmELoRDq8FbiP3VCss9MhCut7Q==}
@@ -1462,6 +1529,19 @@ packages:
   /@types/trusted-types/2.0.2:
     resolution: {integrity: sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==}
     dev: true
+
+  /@use-gesture/core/10.2.15:
+    resolution: {integrity: sha512-R8k5GHKR6J3n48K1xiWCBSnTsxmfiVCp+MYPMhFaoHT1/oIjrFA6SeMmWDl0REwP/CpBfNdQ0FwOo/0dGjPhwA==}
+    dev: false
+
+  /@use-gesture/react/10.2.15_react@18.1.0:
+    resolution: {integrity: sha512-Hdfp17a3iHDo33jasd8GIPlIjM4wxNzn1O9apNX2VrF7X2ewzXp4wCCQ4aPqsnyvBA1WhR8KHMrBS/XWQZxTHQ==}
+    peerDependencies:
+      react: '>= 16.8.0'
+    dependencies:
+      '@use-gesture/core': 10.2.15
+      react: 18.1.0
+    dev: false
 
   /@vitejs/plugin-react/1.3.2:
     resolution: {integrity: sha512-aurBNmMo0kz1O4qRoY+FM4epSA39y3ShWGuqfLRA/3z0oEJAdtoSfgA3aO98/PCCHAqMaduLxIxErWrVKIFzXA==}
@@ -2127,6 +2207,14 @@ packages:
   /fast-json-stable-stringify/2.1.0:
     resolution: {integrity: sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==}
     dev: true
+
+  /fast-unique-numbers/6.0.19:
+    resolution: {integrity: sha512-WvvR2QLJR9xoDleS1kQpWDrtGoOoFEE7Z7sQwx6APk+R3CYwbzpyx6Co8LdQocw788wwcTC+0VAeNsFvzIb3Pw==}
+    engines: {node: '>=12.20.1'}
+    dependencies:
+      '@babel/runtime': 7.18.9
+      tslib: 2.4.0
+    dev: false
 
   /fastq/1.13.0:
     resolution: {integrity: sha512-YpkpUnK8od0o1hmeSc7UUs/eB/vIPWJYjKck2QKIzAf71Vm1AAQ3EbuZB3g2JIy+pg+ERD0vqI79KyZiB2e2Nw==}
@@ -3216,6 +3304,10 @@ packages:
       punycode: 2.1.1
     dev: true
 
+  /tslib/2.4.0:
+    resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
+    dev: false
+
   /type-fest/0.16.0:
     resolution: {integrity: sha512-eaBzG6MxNzEn9kiwvtre90cXaNLkmadMWa1zQMs3XORCXNbsH/OewwbxC5ia9dCxIxnTAsSxXJaa/p5y8DlvJg==}
     engines: {node: '>=10'}
@@ -3502,6 +3594,31 @@ packages:
       '@types/trusted-types': 2.0.2
       workbox-core: 6.5.3
     dev: true
+
+  /worker-timers-broker/6.0.73:
+    resolution: {integrity: sha512-wjWhOlKUNu1ZBRUk0kX90DQpuoLHKQbaZe2FvJtczboT50TK0VrIMX1SIs687D+dDof7K9yxq6bSF8gk59fLJA==}
+    dependencies:
+      '@babel/runtime': 7.18.9
+      fast-unique-numbers: 6.0.19
+      tslib: 2.4.0
+      worker-timers-worker: 7.0.40
+    dev: false
+
+  /worker-timers-worker/7.0.40:
+    resolution: {integrity: sha512-ymobe9NWtdVRtk6UzGEXCDshWmUpoz1sEVpwOB9G2mKze/JiJ1vHAISH4Qww48X8OnS7958DRMreqFqVdcJUUw==}
+    dependencies:
+      '@babel/runtime': 7.18.9
+      tslib: 2.4.0
+    dev: false
+
+  /worker-timers/7.0.51:
+    resolution: {integrity: sha512-pUeHVFXaZ4qDCN3sopn2VSufsLJHy0VC1u6Wm9p+ch5qGCfuFzetUUrfojkDHUhBwRdgNNY89RI7sUCJx279dg==}
+    dependencies:
+      '@babel/runtime': 7.18.9
+      tslib: 2.4.0
+      worker-timers-broker: 6.0.73
+      worker-timers-worker: 7.0.40
+    dev: false
 
   /wrappy/1.0.2:
     resolution: {integrity: sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=}

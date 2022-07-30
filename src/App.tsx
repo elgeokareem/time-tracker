@@ -1,4 +1,7 @@
 import { useEffect, useState, useRef } from "react";
+import * as workerTimers from "worker-timers";
+import { useSpring, animated } from "@react-spring/web";
+import { useDrag } from "@use-gesture/react";
 
 // PWA
 import { useRegisterSW } from "virtual:pwa-register/react";
@@ -145,7 +148,7 @@ function App() {
 
   useEffect(() => {
     if (continueTimer) {
-      const timeoutId = setInterval(() => {
+      const timeoutId = workerTimers.setTimeout(() => {
         const newDate = addSeconds(time, 1);
         const dateDifferenceInMiliseconds =
           newDate.getTime() - initialDate.getTime();
